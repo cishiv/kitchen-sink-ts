@@ -1,10 +1,11 @@
 'use client'
 
-import { createFileRoute, useNavigate, Link } from '@tanstack/react-router'
+import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useState } from 'react'
+import type { JSX } from 'react'
 import { authClient } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
 import {
@@ -57,7 +58,7 @@ function LoginPage(): JSX.Element {
       const result = await authClient.signIn.email({
         email: values.email,
         password: values.password,
-        callbackURL: '/',
+        callbackURL: '/dashboard',
       })
 
       if (result.error) {
@@ -65,7 +66,7 @@ function LoginPage(): JSX.Element {
         return
       }
 
-      navigate({ to: '/' })
+      navigate({ to: '/dashboard' })
     } catch (err) {
       setError('An unexpected error occurred')
     } finally {
@@ -92,9 +93,7 @@ function LoginPage(): JSX.Element {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Welcome Back</CardTitle>
-          <CardDescription>
-            Sign in to your account to continue
-          </CardDescription>
+          <CardDescription>Sign in to your account to continue</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -124,16 +123,18 @@ function LoginPage(): JSX.Element {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {error && (
-                <div className="text-sm text-destructive">{error}</div>
-              )}
+              {error && <div className="text-sm text-destructive">{error}</div>}
 
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? 'Signing in...' : 'Sign In'}

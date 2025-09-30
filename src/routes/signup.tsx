@@ -66,7 +66,7 @@ function SignUpPage(): JSX.Element {
         name: values.name,
         email: values.email,
         password: values.password,
-        callbackURL: '/',
+        callbackURL: '/dashboard',
       })
 
       if (result.error) {
@@ -74,7 +74,7 @@ function SignUpPage(): JSX.Element {
         return
       }
 
-      navigate({ to: '/' })
+      navigate({ to: '/dashboard' })
     } catch (err) {
       setError('An unexpected error occurred')
     } finally {
