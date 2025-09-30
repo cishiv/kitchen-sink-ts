@@ -1,10 +1,10 @@
+/// <reference types="vite/client" />
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanstackDevtools } from '@tanstack/react-devtools'
 
 import Header from '../components/Header'
-
-import appCss from '../styles.css?url'
+import appCss from '@/styles.css?url'
 
 export const Route = createRootRoute({
   head: () => ({

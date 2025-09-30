@@ -7,4 +7,10 @@ export const auth = betterAuth({
     provider: 'pg', // or "mysql", "sqlite"
     usePlural: true,
   }),
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    },
+  },
 })
