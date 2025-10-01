@@ -9,7 +9,6 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
-import { z } from 'zod'
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
@@ -92,8 +91,8 @@ export const selectSubscriptionTierSchema =
 export const insertSubscriptionTierSchema = createInsertSchema(
   subscriptionTiers,
   {
-    name: z.string().min(1, 'Tier name cannot be empty'),
-    features: z.array(z.string()).default([]),
+    name: (schema) => schema.min(1, 'Tier name cannot be empty'),
+    features: (schema) => schema.default([]),
   },
 )
 
@@ -155,7 +154,10 @@ export const subscriptions = pgTable('subscriptions', {
   endedAt: timestamp('ended_at'),
 
   // Metadata
-  metadata: jsonb('metadata').default({}).notNull(),
+  metadata: jsonb('metadata')
+    .$type<Record<string, unknown>>()
+    .default({})
+    .notNull(),
 
   // Timestamps
   createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -164,15 +166,15 @@ export const subscriptions = pgTable('subscriptions', {
 
 export const selectSubscriptionSchema = createSelectSchema(subscriptions)
 export const insertSubscriptionSchema = createInsertSchema(subscriptions, {
-  polarSubscriptionId: z
-    .string()
-    .min(1, 'Polar subscription ID cannot be empty'),
-  polarCustomerId: z.string().min(1, 'Polar customer ID cannot be empty'),
-  polarProductId: z.string().min(1, 'Polar product ID cannot be empty'),
-  customerEmail: z.string().email('Invalid customer email'),
-  status: z.string().min(1, 'Status cannot be empty'),
-  amount: z.number().min(0, 'Amount must be non-negative'),
-  currency: z.string().length(3, 'Currency must be 3 characters'),
+  polarSubscriptionId: (schema) =>
+    schema.min(1, 'Polar subscription ID cannot be empty'),
+  polarCustomerId: (schema) =>
+    schema.min(1, 'Polar customer ID cannot be empty'),
+  polarProductId: (schema) => schema.min(1, 'Polar product ID cannot be empty'),
+  customerEmail: (schema) => schema.email('Invalid customer email'),
+  status: (schema) => schema.min(1, 'Status cannot be empty'),
+  amount: (schema) => schema.min(0, 'Amount must be non-negative'),
+  currency: (schema) => schema.length(3, 'Currency must be 3 characters'),
 })
 
 // Export subscription types
@@ -202,10 +204,10 @@ export const uploads = pgTable('uploads', {
 
 export const selectUploadSchema = createSelectSchema(uploads)
 export const insertUploadSchema = createInsertSchema(uploads, {
-  fileName: z.string().min(1, 'File name cannot be empty'),
-  fileKey: z.string().min(1, 'File key cannot be empty'),
-  fileSize: z.number().min(0, 'File size must be non-negative'),
-  mimeType: z.string().min(1, 'MIME type cannot be empty'),
+  fileName: (schema) => schema.min(1, 'File name cannot be empty'),
+  fileKey: (schema) => schema.min(1, 'File key cannot be empty'),
+  fileSize: (schema) => schema.min(0, 'File size must be non-negative'),
+  mimeType: (schema) => schema.min(1, 'MIME type cannot be empty'),
 })
 
 // Export upload types

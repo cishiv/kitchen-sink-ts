@@ -5,8 +5,9 @@ import { createServerFn, useServerFn } from '@tanstack/react-start'
 import { useQuery } from '@tanstack/react-query'
 import { AlertCircle, CalendarDays, CreditCard } from 'lucide-react'
 import { and, eq } from 'drizzle-orm'
+import { notFound } from '@tanstack/react-router'
 import type { JSX } from 'react'
-import type { Subscription } from '@/lib/db/schema'
+import type { UserSubscription } from '@/lib/types'
 import {
   Card,
   CardContent,
@@ -18,21 +19,13 @@ import { Badge } from '@/components/ui/badge'
 import { CancelSubscriptionButton } from '@/components/CancelSubscriptionButton'
 import { db } from '@/lib/db'
 import { subscriptions, users } from '@/lib/db/schema'
+import adaptSubscription from '@/lib/adapters/subscription.adapter'
 
-type UserSubscriptionData = {
-  subscription: Subscription | null
-}
-
-// FIXME: I don't quite understand the return type of .handler
-// If I explicitly type the responses, it fails. How do I return a "empty" state without null?
-// This should also probably be a GET
 const getServerUserSubscription = createServerFn({
   method: 'POST',
 })
   .inputValidator((data: string) => data)
-  .handler(async ({ data }) => {
-    // .inputValidator((data: { userEmail: string }) => data)
-    // .handler(async ({ data }): Promise<UserSubscriptionData> => {
+  .handler(async ({ data }): Promise<UserSubscription | null> => {
     console.log(data)
     const userEmail = data
 
@@ -50,19 +43,13 @@ const getServerUserSubscription = createServerFn({
         .limit(1)
 
       if (!userSubscription) {
-        return {
-          subscription: null,
-        } as any
+        return null // we can just do this. Not sure how we deal with notFound() on the client
       }
 
-      return {
-        subscription: userSubscription as unknown as Subscription,
-      } as any
+      return adaptSubscription(userSubscription.subscription)
     } catch (error) {
       console.error('Error fetching user subscription:', error)
-      return {
-        subscription: null,
-      } as any
+      throw new Error('Error fetching user subscription')
     }
   })
 
@@ -70,7 +57,7 @@ interface UserSubscriptionProps {
   userEmail: string
 }
 
-export function UserSubscription({
+export function UserSubscriptionView({
   userEmail,
 }: UserSubscriptionProps): JSX.Element {
   const getUserSubscription = useServerFn(getServerUserSubscription)
@@ -123,7 +110,7 @@ export function UserSubscription({
     )
   }
 
-  if (!subscriptionData.data.subscription) {
+  if (!subscriptionData.data) {
     return (
       <Card>
         <CardHeader>
@@ -141,7 +128,7 @@ export function UserSubscription({
     )
   }
 
-  const { subscription } = subscriptionData.data.subscription
+  const subscription = subscriptionData.data as UserSubscription
   const nextBillingDate = new Date(subscription.currentPeriodEnd)
   const isActive = subscription.status === 'active'
   const willCancelAtPeriodEnd = subscription.cancelAtPeriodEnd
@@ -193,10 +180,12 @@ export function UserSubscription({
                 <strong>Next billing:</strong>{' '}
                 {nextBillingDate.toLocaleDateString()}
               </p>
-              <p>
-                <strong>Started:</strong>{' '}
-                {new Date(subscription.startedAt).toLocaleDateString()}
-              </p>
+              {subscription.startedAt && (
+                <p>
+                  <strong>Started:</strong>{' '}
+                  {new Date(subscription.startedAt).toLocaleDateString()}
+                </p>
+              )}
             </div>
           </div>
         </div>

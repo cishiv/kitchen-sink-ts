@@ -35,6 +35,9 @@ export default function Header(): JSX.Element {
             <div className="px-2 font-bold">
               <Link to="/dashboard">Dashboard</Link>
             </div>
+            <div className="px-2 font-bold">
+              <Link to="/billing">Billing</Link>
+            </div>
             <div className="px-2">
               <button
                 onClick={handleSignOut}
