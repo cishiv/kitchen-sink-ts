@@ -2,7 +2,6 @@
 'use client'
 
 import { createServerFn, useServerFn } from '@tanstack/react-start'
-import { Link } from '@tanstack/react-router'
 import { Check } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import type { JSX } from 'react'
@@ -126,15 +125,11 @@ export function ProductsGrid(): JSX.Element {
 
               <div className="mt-6 pt-4 border-t">
                 <Button asChild className="w-full">
-                  <Link
-                    to="/api/billing/checkout"
-                    search={{
-                      products: product.id,
-                      customerExternalId: authUser.data?.user.id,
-                    }}
+                  <a
+                    href={`/api/billing/checkout?products=${product.id}&customerExternalId=${authUser.data?.user.id}`}
                   >
                     {price?.amountType === 'free' ? 'Get Started' : 'Subscribe'}
-                  </Link>
+                  </a>
                 </Button>
               </div>
             </CardContent>
