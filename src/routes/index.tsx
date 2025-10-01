@@ -1,11 +1,11 @@
 import { Link, createFileRoute, redirect } from '@tanstack/react-router'
 import type { JSX } from 'react/jsx-runtime'
 import { Button } from '@/components/ui/button'
-import { getAuthUser } from '@/lib/auth-helpers'
+import { getServerAuthUser } from '@/lib/auth-helpers'
 
 export const Route = createFileRoute('/')({
   beforeLoad: async (): Promise<void> => {
-    const authUser = await getAuthUser()
+    const authUser = await getServerAuthUser()
 
     if (authUser) {
       throw redirect({

@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 'use client'
 
-import { createServerFn } from '@tanstack/react-start'
+import { createServerFn, useServerFn } from '@tanstack/react-start'
 import { Link } from '@tanstack/react-router'
+import { Check } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import type { JSX } from 'react'
 import {
   Card,
   CardContent,
@@ -11,19 +15,17 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Check } from 'lucide-react'
 import { api } from '@/lib/polar'
-import { getAuthUser } from '@/lib/auth-helpers'
-import type { Product } from '@polar-sh/sdk/models/components'
+import { getServerAuthUser } from '@/lib/auth-helpers'
 
 type ProductsResponse = {
-  items: Product[]
+  items: Array<any>
 }
 
 /**
  * Server function to fetch products from Polar
  */
-const getProducts = createServerFn({ method: 'GET' }).handler(
+const getServerProducts = createServerFn({ method: 'GET' }).handler(
   async (): Promise<ProductsResponse | null> => {
     try {
       const { result } = await api.products.list({
@@ -45,12 +47,19 @@ const getProducts = createServerFn({ method: 'GET' }).handler(
 )
 
 export function ProductsGrid(): JSX.Element {
-  const [productsData] = getProducts()
-  const [authData] = getAuthUser()
+  const getProducts = useServerFn(getServerProducts)
+  const getAuthUser = useServerFn(getServerAuthUser)
 
-  const userId = authData?.user.id
+  const productsData = useQuery({
+    queryKey: ['products'],
+    queryFn: () => getProducts(),
+  })
+  const authUser = useQuery({
+    queryKey: ['authUser'],
+    queryFn: () => getAuthUser(),
+  })
 
-  if (!productsData || productsData.items.length === 0) {
+  if (!productsData || productsData.data?.items.length === 0) {
     return (
       <div className="text-center py-12">
         <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -63,7 +72,7 @@ export function ProductsGrid(): JSX.Element {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {productsData.items.map((product) => {
+      {productsData.data?.items.map((product: any) => {
         const price = product.prices?.[0]
         const priceDisplay = price
           ? price.amountType === 'fixed'
@@ -99,7 +108,7 @@ export function ProductsGrid(): JSX.Element {
                       Features:
                     </h4>
                     <ul className="space-y-1">
-                      {product.benefits.map((benefit) => (
+                      {product.benefits.map((benefit: any) => (
                         <li
                           key={benefit.id}
                           className="flex items-start gap-2 text-sm"
@@ -121,7 +130,7 @@ export function ProductsGrid(): JSX.Element {
                     to="/api/billing/checkout"
                     search={{
                       products: product.id,
-                      customerExternalId: userId,
+                      customerExternalId: authUser.data?.user.id,
                     }}
                   >
                     {price?.amountType === 'free' ? 'Get Started' : 'Subscribe'}

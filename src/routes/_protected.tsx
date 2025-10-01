@@ -1,10 +1,10 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 import type { JSX } from 'react'
-import { getAuthUser } from '@/lib/auth-helpers'
+import { getServerAuthUser } from '@/lib/auth-helpers'
 
 export const Route = createFileRoute('/_protected')({
   beforeLoad: async (): Promise<void> => {
-    const authUser = await getAuthUser()
+    const authUser = await getServerAuthUser()
 
     if (!authUser) {
       throw redirect({

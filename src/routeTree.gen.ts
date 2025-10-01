@@ -15,9 +15,11 @@ import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiUserRouteImport } from './routes/api/user'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
+import { Route as ProtectedBillingRouteImport } from './routes/_protected/billing'
 import { Route as ApiWebhooksPolarRouteImport } from './routes/api/webhooks/polar'
 import { Route as ApiBillingCheckoutRouteImport } from './routes/api/billing/checkout'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ProtectedBillingSuccessRouteImport } from './routes/_protected/billing.success'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -48,6 +50,11 @@ const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedBillingRoute = ProtectedBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ApiWebhooksPolarRoute = ApiWebhooksPolarRouteImport.update({
   id: '/api/webhooks/polar',
   path: '/api/webhooks/polar',
@@ -63,13 +70,20 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProtectedBillingSuccessRoute = ProtectedBillingSuccessRouteImport.update({
+  id: '/success',
+  path: '/success',
+  getParentRoute: () => ProtectedBillingRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/billing': typeof ProtectedBillingRouteWithChildren
   '/dashboard': typeof ProtectedDashboardRoute
   '/api/user': typeof ApiUserRoute
+  '/billing/success': typeof ProtectedBillingSuccessRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
   '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
@@ -78,8 +92,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/billing': typeof ProtectedBillingRouteWithChildren
   '/dashboard': typeof ProtectedDashboardRoute
   '/api/user': typeof ApiUserRoute
+  '/billing/success': typeof ProtectedBillingSuccessRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
   '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
@@ -90,8 +106,10 @@ export interface FileRoutesById {
   '/_protected': typeof ProtectedRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/_protected/billing': typeof ProtectedBillingRouteWithChildren
   '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/api/user': typeof ApiUserRoute
+  '/_protected/billing/success': typeof ProtectedBillingSuccessRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
   '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
@@ -102,8 +120,10 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
+    | '/billing'
     | '/dashboard'
     | '/api/user'
+    | '/billing/success'
     | '/api/auth/$'
     | '/api/billing/checkout'
     | '/api/webhooks/polar'
@@ -112,8 +132,10 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
+    | '/billing'
     | '/dashboard'
     | '/api/user'
+    | '/billing/success'
     | '/api/auth/$'
     | '/api/billing/checkout'
     | '/api/webhooks/polar'
@@ -123,8 +145,10 @@ export interface FileRouteTypes {
     | '/_protected'
     | '/login'
     | '/signup'
+    | '/_protected/billing'
     | '/_protected/dashboard'
     | '/api/user'
+    | '/_protected/billing/success'
     | '/api/auth/$'
     | '/api/billing/checkout'
     | '/api/webhooks/polar'
@@ -185,6 +209,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDashboardRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/billing': {
+      id: '/_protected/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof ProtectedBillingRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/api/webhooks/polar': {
       id: '/api/webhooks/polar'
       path: '/api/webhooks/polar'
@@ -206,14 +237,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_protected/billing/success': {
+      id: '/_protected/billing/success'
+      path: '/success'
+      fullPath: '/billing/success'
+      preLoaderRoute: typeof ProtectedBillingSuccessRouteImport
+      parentRoute: typeof ProtectedBillingRoute
+    }
   }
 }
 
+interface ProtectedBillingRouteChildren {
+  ProtectedBillingSuccessRoute: typeof ProtectedBillingSuccessRoute
+}
+
+const ProtectedBillingRouteChildren: ProtectedBillingRouteChildren = {
+  ProtectedBillingSuccessRoute: ProtectedBillingSuccessRoute,
+}
+
+const ProtectedBillingRouteWithChildren =
+  ProtectedBillingRoute._addFileChildren(ProtectedBillingRouteChildren)
+
 interface ProtectedRouteChildren {
+  ProtectedBillingRoute: typeof ProtectedBillingRouteWithChildren
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedBillingRoute: ProtectedBillingRouteWithChildren,
   ProtectedDashboardRoute: ProtectedDashboardRoute,
 }
 

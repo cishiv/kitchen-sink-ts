@@ -12,7 +12,7 @@ export type AuthSession = {
  * Server function to get the current authenticated user
  * Returns the session and user if authenticated, null otherwise
  */
-export const getAuthUser = createServerFn({ method: 'GET' }).handler(
+export const getServerAuthUser = createServerFn({ method: 'GET' }).handler(
   async (): Promise<AuthSession | null> => {
     const session = await auth.api.getSession({
       headers: getRequestHeaders(),
