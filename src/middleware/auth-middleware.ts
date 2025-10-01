@@ -1,6 +1,6 @@
-import { createMiddleware } from '@tanstack/start'
+import { createMiddleware } from '@tanstack/react-start'
+import type { Session, User } from 'better-auth/types'
 import { auth } from '@/lib/auth'
-import { type Session, type User } from 'better-auth/types'
 
 export type AuthContext = {
   user: User
@@ -12,12 +12,12 @@ export type AuthContext = {
  * Validates the session and adds user context
  */
 export const authMiddleware = createMiddleware().server(
-  async ({ next, data }): Promise<AuthContext> => {
+  async ({ next, context, request }) => {
     const session = await auth.api.getSession({
-      headers: data.request.headers,
+      headers: request.headers,
     })
 
-    if (!session || !session.user) {
+    if (!session?.user) {
       throw new Response('Unauthorized', {
         status: 401,
         statusText: 'Unauthorized',
