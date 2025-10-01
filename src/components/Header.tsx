@@ -1,14 +1,11 @@
 'use client'
 
 import { Link, useRouter } from '@tanstack/react-router'
+import { CreditCard, LayoutDashboard, LogOut } from 'lucide-react'
 import type { JSX } from 'react'
-import { LogOut, LayoutDashboard, CreditCard } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
-import {
-  Avatar,
-  AvatarFallback,
-} from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,7 +33,9 @@ export default function Header(): JSX.Element {
     if (!name) return 'U'
     const parts = name.trim().split(' ')
     if (parts.length === 1) return parts[0].charAt(0).toUpperCase()
-    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
+    return (
+      parts[0].charAt(0) + parts[parts.length - 1].charAt(0)
+    ).toUpperCase()
   }
 
   return (
@@ -54,7 +53,10 @@ export default function Header(): JSX.Element {
           {session?.user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                <Button
+                  variant="ghost"
+                  className="relative h-10 w-10 rounded-full"
+                >
                   <Avatar className="h-10 w-10">
                     <AvatarFallback className="bg-primary text-primary-foreground">
                       {getUserInitials(session.user.name)}
