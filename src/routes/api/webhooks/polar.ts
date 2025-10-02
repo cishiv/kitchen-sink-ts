@@ -90,7 +90,7 @@ export const Route = createFileRoute('/api/webhooks/polar')({
   server: {
     handlers: {
       POST: Webhooks({
-        webhookSecret: process.env.POLAR_WEBHOOK_SECRET || '',
+        webhookSecret: process.env.POLAR_WEBHOOK_SECRET!,
         onPayload: async (payload) => {
           console.log(`📦 Received Polar webhook: ${payload.type}`)
           console.log('Full webhook payload:', JSON.stringify(payload, null, 2))
