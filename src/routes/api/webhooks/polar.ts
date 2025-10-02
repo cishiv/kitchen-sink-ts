@@ -5,9 +5,7 @@ import { eq } from 'drizzle-orm'
 import { subscriptions, users } from '@/lib/db/schema'
 import { db } from '@/lib/db'
 
-// Helper function to find user by customerExternalId (Clerk ID) or email fallback
 async function findUserForSubscription(data: any) {
-  // 1. First priority: Match by customerExternalId (Clerk ID)
   const customerId = data.customerExternalId || data.externalCustomerId // both fields are usually available
   if (customerId) {
     const [user] = await db
@@ -17,10 +15,10 @@ async function findUserForSubscription(data: any) {
       .limit(1)
 
     if (user) {
-      console.log(`✅ Found user by Clerk ID: ${customerId}`)
+      console.log(`✅ Found user by ID: ${customerId}`)
       return user
     }
-    console.warn(`⚠️ No user found for Clerk ID: ${customerId}`)
+    console.warn(`⚠️ No user found for ID: ${customerId}`)
   }
 
   // 2. Fallback: Match by email (for backwards compatibility)
@@ -214,7 +212,7 @@ async function handleSubscriptionCreated(data: any) {
 
   if (!user && customerId) {
     console.error(
-      `Creating orphaned subscription for later reconciliation - Clerk ID: ${customerId}`,
+      `Creating orphaned subscription for later reconciliation - ID: ${customerId}`,
     )
   } else if (!user) {
     console.error(`No user identification found - no Customer ID or email`)
@@ -282,11 +280,11 @@ async function handleSubscriptionActive(data: any) {
       'Full subscription active payload:',
       JSON.stringify(data, null, 2),
     )
-    const clerkId = data.customerExternalId || data.externalCustomerId
+    const customerId = data.customerExternalId || data.externalCustomerId
     const customerEmail = data.customer?.email
 
     console.log(`✅ Subscription active: ${data.id}`, {
-      clerkId,
+      customerId,
       customerEmail,
       status: data.status,
     })
@@ -295,7 +293,7 @@ async function handleSubscriptionActive(data: any) {
       .update(subscriptions)
       .set({
         status: 'active',
-        customerExternalId: clerkId || null,
+        customerExternalId: customerId || null,
         updatedAt: new Date(),
       })
       .where(eq(subscriptions.polarSubscriptionId, data.id))
@@ -313,11 +311,11 @@ async function handleSubscriptionUpdated(data: any) {
       'Full subscription updated payload:',
       JSON.stringify(data, null, 2),
     )
-    const clerkId = data.customerExternalId || data.externalCustomerId
+    const customerId = data.customerExternalId || data.externalCustomerId
     const customerEmail = data.customer?.email
 
     console.log(`🔄 Subscription updated: ${data.id}`, {
-      clerkId,
+      customerId,
       customerEmail,
       status: data.status,
       cancelAtPeriodEnd: data.cancelAtPeriodEnd,
@@ -337,10 +335,10 @@ async function handleSubscriptionUpdated(data: any) {
         cancellationComment: data.customerCancellationComment,
         endsAt: safeDate(data.endsAt),
         endedAt: safeDate(data.endedAt),
-        customerExternalId: clerkId || null,
+        customerExternalId: customerId || null,
         metadata: {
           ...(data.metadata || {}),
-          customerExternalId: clerkId,
+          customerExternalId: customerId,
           originalEmail: customerEmail,
         },
         updatedAt: new Date(),
@@ -360,11 +358,11 @@ async function handleSubscriptionCanceled(data: any) {
       'Full subscription canceled payload:',
       JSON.stringify(data, null, 2),
     )
-    const clerkId = data.customerExternalId || data.externalCustomerId
+    const customerId = data.customerExternalId || data.externalCustomerId
     const customerEmail = data.customer?.email
 
     console.log(`❌ Subscription canceled: ${data.id}`, {
-      clerkId,
+      customerId,
       customerEmail,
       cancellationReason: data.customerCancellationReason,
       cancellationComment: data.customerCancellationComment,
@@ -377,7 +375,7 @@ async function handleSubscriptionCanceled(data: any) {
         canceledAt: new Date(),
         cancellationReason: data.customerCancellationReason,
         cancellationComment: data.customerCancellationComment,
-        customerExternalId: clerkId || null,
+        customerExternalId: customerId || null,
         updatedAt: new Date(),
       })
       .where(eq(subscriptions.polarSubscriptionId, data.id))
@@ -395,11 +393,11 @@ async function handleSubscriptionRevoked(data: any) {
       'Full subscription revoked payload:',
       JSON.stringify(data, null, 2),
     )
-    const clerkId = data.customerExternalId || data.externalCustomerId
+    const customerId = data.customerExternalId || data.externalCustomerId
     const customerEmail = data.customer?.email
 
     console.log(`🚫 Subscription revoked: ${data.id}`, {
-      clerkId,
+      customerId,
       customerEmail,
       status: data.status,
       endsAt: data.endsAt,
@@ -411,7 +409,7 @@ async function handleSubscriptionRevoked(data: any) {
       .set({
         status: 'revoked',
         endedAt: new Date(),
-        customerExternalId: clerkId || null,
+        customerExternalId: customerId || null,
         updatedAt: new Date(),
       })
       .where(eq(subscriptions.polarSubscriptionId, data.id))
