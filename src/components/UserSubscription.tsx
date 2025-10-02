@@ -16,7 +16,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { CancelSubscriptionButton } from '@/components/CancelSubscriptionButton'
+import { SubscriptionActionButton } from '@/components/SubscriptionActionButton'
 import { db } from '@/lib/db'
 import { subscriptions, users } from '@/lib/db/schema'
 import adaptSubscription from '@/lib/adapters/subscription.adapter'
@@ -36,9 +36,7 @@ const getServerUserSubscription = createServerFn({
         })
         .from(subscriptions)
         .innerJoin(users, eq(users.id, subscriptions.userId))
-        .where(
-          and(eq(users.email, userEmail), eq(subscriptions.status, 'active')),
-        )
+        .where(and(eq(users.email, userEmail)))
         .orderBy(subscriptions.createdAt)
         .limit(1)
 
@@ -132,6 +130,7 @@ export function UserSubscriptionView({
   const nextBillingDate = new Date(subscription.currentPeriodEnd)
   const isActive = subscription.status === 'active'
   const willCancelAtPeriodEnd = subscription.cancelAtPeriodEnd
+  const canManageSubscription = isActive || willCancelAtPeriodEnd
 
   return (
     <Card>
@@ -200,11 +199,19 @@ export function UserSubscriptionView({
           </div>
         )}
 
-        {isActive && !willCancelAtPeriodEnd && (
+        {canManageSubscription && (
           <div className="pt-4 border-t">
-            <CancelSubscriptionButton
-              subscriptionId={subscription.polarSubscriptionId}
-            />
+            {willCancelAtPeriodEnd ? (
+              <SubscriptionActionButton
+                action="reinstate"
+                subscriptionId={subscription.polarSubscriptionId}
+              />
+            ) : (
+              <SubscriptionActionButton
+                action="cancel"
+                subscriptionId={subscription.polarSubscriptionId}
+              />
+            )}
           </div>
         )}
       </CardContent>

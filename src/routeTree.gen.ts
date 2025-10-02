@@ -17,6 +17,7 @@ import { Route as ApiUserRouteImport } from './routes/api/user'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedBillingRouteImport } from './routes/_protected/billing'
 import { Route as ApiWebhooksPolarRouteImport } from './routes/api/webhooks/polar'
+import { Route as ApiBillingSubscriptionRouteImport } from './routes/api/billing/subscription'
 import { Route as ApiBillingCheckoutRouteImport } from './routes/api/billing/checkout'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ProtectedBillingSuccessRouteImport } from './routes/_protected/billing.success'
@@ -60,6 +61,11 @@ const ApiWebhooksPolarRoute = ApiWebhooksPolarRouteImport.update({
   path: '/api/webhooks/polar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiBillingSubscriptionRoute = ApiBillingSubscriptionRouteImport.update({
+  id: '/api/billing/subscription',
+  path: '/api/billing/subscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiBillingCheckoutRoute = ApiBillingCheckoutRouteImport.update({
   id: '/api/billing/checkout',
   path: '/api/billing/checkout',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/billing/success': typeof ProtectedBillingSuccessRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
+  '/api/billing/subscription': typeof ApiBillingSubscriptionRoute
   '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
 }
 export interface FileRoutesByTo {
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/billing/success': typeof ProtectedBillingSuccessRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
+  '/api/billing/subscription': typeof ApiBillingSubscriptionRoute
   '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
 }
 export interface FileRoutesById {
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/_protected/billing/success': typeof ProtectedBillingSuccessRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
+  '/api/billing/subscription': typeof ApiBillingSubscriptionRoute
   '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
 }
 export interface FileRouteTypes {
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/billing/success'
     | '/api/auth/$'
     | '/api/billing/checkout'
+    | '/api/billing/subscription'
     | '/api/webhooks/polar'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/billing/success'
     | '/api/auth/$'
     | '/api/billing/checkout'
+    | '/api/billing/subscription'
     | '/api/webhooks/polar'
   id:
     | '__root__'
@@ -151,6 +162,7 @@ export interface FileRouteTypes {
     | '/_protected/billing/success'
     | '/api/auth/$'
     | '/api/billing/checkout'
+    | '/api/billing/subscription'
     | '/api/webhooks/polar'
   fileRoutesById: FileRoutesById
 }
@@ -162,6 +174,7 @@ export interface RootRouteChildren {
   ApiUserRoute: typeof ApiUserRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiBillingCheckoutRoute: typeof ApiBillingCheckoutRoute
+  ApiBillingSubscriptionRoute: typeof ApiBillingSubscriptionRoute
   ApiWebhooksPolarRoute: typeof ApiWebhooksPolarRoute
 }
 
@@ -223,6 +236,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiWebhooksPolarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/billing/subscription': {
+      id: '/api/billing/subscription'
+      path: '/api/billing/subscription'
+      fullPath: '/api/billing/subscription'
+      preLoaderRoute: typeof ApiBillingSubscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/billing/checkout': {
       id: '/api/billing/checkout'
       path: '/api/billing/checkout'
@@ -280,6 +300,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiUserRoute: ApiUserRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiBillingCheckoutRoute: ApiBillingCheckoutRoute,
+  ApiBillingSubscriptionRoute: ApiBillingSubscriptionRoute,
   ApiWebhooksPolarRoute: ApiWebhooksPolarRoute,
 }
 export const routeTree = rootRouteImport
