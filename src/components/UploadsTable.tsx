@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Download, Trash2, Eye } from 'lucide-react'
+import { Download, Eye, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
 import type { JSX } from 'react'
 import type { Upload } from '@/lib/db/schema'

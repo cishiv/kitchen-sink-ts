@@ -47,6 +47,11 @@ export default function Header(): JSX.Element {
               Home
             </Link>
           </Button>
+          <Button variant="ghost" asChild>
+            <Link to="/blog" className="font-semibold text-lg">
+              Blog
+            </Link>
+          </Button>
         </nav>
 
         <nav className="flex items-center gap-2">
