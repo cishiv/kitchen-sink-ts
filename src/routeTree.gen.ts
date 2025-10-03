@@ -16,11 +16,17 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiUserRouteImport } from './routes/api/user'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedBillingRouteImport } from './routes/_protected/billing'
+import { Route as ApiUploadsIndexRouteImport } from './routes/api/uploads/index'
 import { Route as ApiWebhooksPolarRouteImport } from './routes/api/webhooks/polar'
+import { Route as ApiUploadsPresignedUrlRouteImport } from './routes/api/uploads/presigned-url'
+import { Route as ApiUploadsCompleteRouteImport } from './routes/api/uploads/complete'
 import { Route as ApiBillingSubscriptionRouteImport } from './routes/api/billing/subscription'
 import { Route as ApiBillingCheckoutRouteImport } from './routes/api/billing/checkout'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ProtectedBillingSuccessRouteImport } from './routes/_protected/billing.success'
+import { Route as ApiUploadsIdIndexRouteImport } from './routes/api/uploads/$id/index'
+import { Route as ApiUploadsIdViewRouteImport } from './routes/api/uploads/$id/view'
+import { Route as ApiUploadsIdDownloadRouteImport } from './routes/api/uploads/$id/download'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -56,9 +62,24 @@ const ProtectedBillingRoute = ProtectedBillingRouteImport.update({
   path: '/billing',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ApiUploadsIndexRoute = ApiUploadsIndexRouteImport.update({
+  id: '/api/uploads/',
+  path: '/api/uploads/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiWebhooksPolarRoute = ApiWebhooksPolarRouteImport.update({
   id: '/api/webhooks/polar',
   path: '/api/webhooks/polar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUploadsPresignedUrlRoute = ApiUploadsPresignedUrlRouteImport.update({
+  id: '/api/uploads/presigned-url',
+  path: '/api/uploads/presigned-url',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUploadsCompleteRoute = ApiUploadsCompleteRouteImport.update({
+  id: '/api/uploads/complete',
+  path: '/api/uploads/complete',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiBillingSubscriptionRoute = ApiBillingSubscriptionRouteImport.update({
@@ -81,6 +102,21 @@ const ProtectedBillingSuccessRoute = ProtectedBillingSuccessRouteImport.update({
   path: '/success',
   getParentRoute: () => ProtectedBillingRoute,
 } as any)
+const ApiUploadsIdIndexRoute = ApiUploadsIdIndexRouteImport.update({
+  id: '/api/uploads/$id/',
+  path: '/api/uploads/$id/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUploadsIdViewRoute = ApiUploadsIdViewRouteImport.update({
+  id: '/api/uploads/$id/view',
+  path: '/api/uploads/$id/view',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUploadsIdDownloadRoute = ApiUploadsIdDownloadRouteImport.update({
+  id: '/api/uploads/$id/download',
+  path: '/api/uploads/$id/download',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -93,7 +129,13 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
   '/api/billing/subscription': typeof ApiBillingSubscriptionRoute
+  '/api/uploads/complete': typeof ApiUploadsCompleteRoute
+  '/api/uploads/presigned-url': typeof ApiUploadsPresignedUrlRoute
   '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
+  '/api/uploads': typeof ApiUploadsIndexRoute
+  '/api/uploads/$id/download': typeof ApiUploadsIdDownloadRoute
+  '/api/uploads/$id/view': typeof ApiUploadsIdViewRoute
+  '/api/uploads/$id': typeof ApiUploadsIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -106,7 +148,13 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
   '/api/billing/subscription': typeof ApiBillingSubscriptionRoute
+  '/api/uploads/complete': typeof ApiUploadsCompleteRoute
+  '/api/uploads/presigned-url': typeof ApiUploadsPresignedUrlRoute
   '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
+  '/api/uploads': typeof ApiUploadsIndexRoute
+  '/api/uploads/$id/download': typeof ApiUploadsIdDownloadRoute
+  '/api/uploads/$id/view': typeof ApiUploadsIdViewRoute
+  '/api/uploads/$id': typeof ApiUploadsIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -121,7 +169,13 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
   '/api/billing/subscription': typeof ApiBillingSubscriptionRoute
+  '/api/uploads/complete': typeof ApiUploadsCompleteRoute
+  '/api/uploads/presigned-url': typeof ApiUploadsPresignedUrlRoute
   '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
+  '/api/uploads/': typeof ApiUploadsIndexRoute
+  '/api/uploads/$id/download': typeof ApiUploadsIdDownloadRoute
+  '/api/uploads/$id/view': typeof ApiUploadsIdViewRoute
+  '/api/uploads/$id/': typeof ApiUploadsIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -136,7 +190,13 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/billing/checkout'
     | '/api/billing/subscription'
+    | '/api/uploads/complete'
+    | '/api/uploads/presigned-url'
     | '/api/webhooks/polar'
+    | '/api/uploads'
+    | '/api/uploads/$id/download'
+    | '/api/uploads/$id/view'
+    | '/api/uploads/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -149,7 +209,13 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/billing/checkout'
     | '/api/billing/subscription'
+    | '/api/uploads/complete'
+    | '/api/uploads/presigned-url'
     | '/api/webhooks/polar'
+    | '/api/uploads'
+    | '/api/uploads/$id/download'
+    | '/api/uploads/$id/view'
+    | '/api/uploads/$id'
   id:
     | '__root__'
     | '/'
@@ -163,7 +229,13 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/billing/checkout'
     | '/api/billing/subscription'
+    | '/api/uploads/complete'
+    | '/api/uploads/presigned-url'
     | '/api/webhooks/polar'
+    | '/api/uploads/'
+    | '/api/uploads/$id/download'
+    | '/api/uploads/$id/view'
+    | '/api/uploads/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -175,7 +247,13 @@ export interface RootRouteChildren {
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiBillingCheckoutRoute: typeof ApiBillingCheckoutRoute
   ApiBillingSubscriptionRoute: typeof ApiBillingSubscriptionRoute
+  ApiUploadsCompleteRoute: typeof ApiUploadsCompleteRoute
+  ApiUploadsPresignedUrlRoute: typeof ApiUploadsPresignedUrlRoute
   ApiWebhooksPolarRoute: typeof ApiWebhooksPolarRoute
+  ApiUploadsIndexRoute: typeof ApiUploadsIndexRoute
+  ApiUploadsIdDownloadRoute: typeof ApiUploadsIdDownloadRoute
+  ApiUploadsIdViewRoute: typeof ApiUploadsIdViewRoute
+  ApiUploadsIdIndexRoute: typeof ApiUploadsIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -229,11 +307,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedBillingRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/api/uploads/': {
+      id: '/api/uploads/'
+      path: '/api/uploads'
+      fullPath: '/api/uploads'
+      preLoaderRoute: typeof ApiUploadsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/webhooks/polar': {
       id: '/api/webhooks/polar'
       path: '/api/webhooks/polar'
       fullPath: '/api/webhooks/polar'
       preLoaderRoute: typeof ApiWebhooksPolarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/uploads/presigned-url': {
+      id: '/api/uploads/presigned-url'
+      path: '/api/uploads/presigned-url'
+      fullPath: '/api/uploads/presigned-url'
+      preLoaderRoute: typeof ApiUploadsPresignedUrlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/uploads/complete': {
+      id: '/api/uploads/complete'
+      path: '/api/uploads/complete'
+      fullPath: '/api/uploads/complete'
+      preLoaderRoute: typeof ApiUploadsCompleteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/billing/subscription': {
@@ -263,6 +362,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/billing/success'
       preLoaderRoute: typeof ProtectedBillingSuccessRouteImport
       parentRoute: typeof ProtectedBillingRoute
+    }
+    '/api/uploads/$id/': {
+      id: '/api/uploads/$id/'
+      path: '/api/uploads/$id'
+      fullPath: '/api/uploads/$id'
+      preLoaderRoute: typeof ApiUploadsIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/uploads/$id/view': {
+      id: '/api/uploads/$id/view'
+      path: '/api/uploads/$id/view'
+      fullPath: '/api/uploads/$id/view'
+      preLoaderRoute: typeof ApiUploadsIdViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/uploads/$id/download': {
+      id: '/api/uploads/$id/download'
+      path: '/api/uploads/$id/download'
+      fullPath: '/api/uploads/$id/download'
+      preLoaderRoute: typeof ApiUploadsIdDownloadRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -301,7 +421,13 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiBillingCheckoutRoute: ApiBillingCheckoutRoute,
   ApiBillingSubscriptionRoute: ApiBillingSubscriptionRoute,
+  ApiUploadsCompleteRoute: ApiUploadsCompleteRoute,
+  ApiUploadsPresignedUrlRoute: ApiUploadsPresignedUrlRoute,
   ApiWebhooksPolarRoute: ApiWebhooksPolarRoute,
+  ApiUploadsIndexRoute: ApiUploadsIndexRoute,
+  ApiUploadsIdDownloadRoute: ApiUploadsIdDownloadRoute,
+  ApiUploadsIdViewRoute: ApiUploadsIdViewRoute,
+  ApiUploadsIdIndexRoute: ApiUploadsIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
