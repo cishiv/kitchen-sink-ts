@@ -36,7 +36,9 @@ const getServerUserSubscription = createServerFn({
         })
         .from(subscriptions)
         .innerJoin(users, eq(users.id, subscriptions.userId))
-        .where(and(eq(users.email, userEmail)))
+        .where(
+          and(eq(users.email, userEmail), eq(subscriptions.status, 'active')), // cancelled subscriptions shouldn't show
+        )
         .orderBy(subscriptions.createdAt)
         .limit(1)
 

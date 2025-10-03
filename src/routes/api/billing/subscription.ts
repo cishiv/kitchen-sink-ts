@@ -32,7 +32,12 @@ export const Route = createFileRoute('/api/billing/subscription')({
           const [userSubscription] = await db
             .select()
             .from(subscriptions)
-            .where(and(eq(subscriptions.userId, user.id)))
+            .where(
+              and(
+                eq(subscriptions.userId, user.id),
+                eq(subscriptions.status, 'active'),
+              ),
+            )
             .limit(1)
 
           if (!userSubscription) {

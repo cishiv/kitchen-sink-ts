@@ -2,9 +2,11 @@
 // routes/api/checkout.ts
 import { Checkout } from '@polar-sh/tanstack-start'
 import { createFileRoute } from '@tanstack/react-router'
+import { authMiddleware } from '@/middleware/auth-middleware'
 
 export const Route = createFileRoute('/api/billing/checkout')({
   server: {
+    middleware: [authMiddleware],
     handlers: {
       GET: Checkout({
         accessToken: process.env.POLAR_ACCESS_TOKEN,

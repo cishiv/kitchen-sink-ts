@@ -4,6 +4,7 @@
 import { createServerFn, useServerFn } from '@tanstack/react-start'
 import { Check } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
+import { eq } from 'drizzle-orm'
 import type { JSX } from 'react'
 import {
   Card,
@@ -16,17 +17,44 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { api } from '@/lib/polar'
 import { getServerAuthUser } from '@/lib/auth-helpers'
+import { db } from '@/lib/db'
+import { subscriptions } from '@/lib/db/schema'
 
 type ProductsResponse = {
   items: Array<any>
 }
 
 /**
- * Server function to fetch products from Polar
+ * Server function to fetch products from Polar, filtering out the user's current subscription
  */
 const getServerProducts = createServerFn({ method: 'GET' }).handler(
   async (): Promise<ProductsResponse | null> => {
     try {
+      // Get authenticated user
+      const authUser = await getServerAuthUser()
+      let userProductId: string | null = null
+
+      // If user is authenticated, check if they have a subscription
+      if (authUser?.user?.id) {
+        const [userSubscription] = await db
+          .select({
+            polarProductId: subscriptions.polarProductId,
+            status: subscriptions.status,
+          })
+          .from(subscriptions)
+          .where(eq(subscriptions.userId, authUser.user.id))
+          .limit(1)
+
+        // Only filter if subscription is active or canceled (but not revoked/ended)
+        if (
+          userSubscription &&
+          (userSubscription.status === 'active' ||
+            userSubscription.status === 'canceled')
+        ) {
+          userProductId = userSubscription.polarProductId
+        }
+      }
+
       const { result } = await api.products.list({
         isArchived: false,
       })
@@ -35,8 +63,13 @@ const getServerProducts = createServerFn({ method: 'GET' }).handler(
         return null
       }
 
+      // Filter out the user's current product if they have one
+      const filteredItems = userProductId
+        ? result.items.filter((product: any) => product.id !== userProductId)
+        : result.items
+
       return {
-        items: result.items,
+        items: filteredItems,
       }
     } catch (error) {
       console.error('Error fetching products:', error)

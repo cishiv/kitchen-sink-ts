@@ -138,11 +138,12 @@ export const Route = createFileRoute('/api/webhooks/polar')({
               break
 
             // Subscription has been explicitly canceled by the user
-            case 'subscription.canceled':
-              await withErrorHandling('subscription.canceled', () =>
-                handleSubscriptionCanceled(payload.data),
-              )
-              break
+            // We don't need to handle this because we handle it in the subscription.updated webhook
+            // case 'subscription.canceled':
+            //   await withErrorHandling('subscription.canceled', () =>
+            //     handleSubscriptionCanceled(payload.data),
+            //   )
+            //   break
 
             default:
               console.log(`Unhandled event type ${payload.type}`)
@@ -352,6 +353,8 @@ async function handleSubscriptionUpdated(data: any) {
   }
 }
 
+// FIXME: This function is wrong. If we have cancelAtPeriodEnd, we should not mark it as canceled.
+// TODO: Fix this.
 async function handleSubscriptionCanceled(data: any) {
   try {
     console.log(

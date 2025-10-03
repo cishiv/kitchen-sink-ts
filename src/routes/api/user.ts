@@ -1,28 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { auth } from '@/lib/auth'
+import type { AuthContext } from '@/middleware/auth-middleware'
+import { authMiddleware } from '@/middleware/auth-middleware'
 
 export const Route = createFileRoute('/api/user')({
   server: {
+    middleware: [authMiddleware],
     handlers: {
-      GET: async ({ request }) => {
+      GET: ({ context }: { context: AuthContext }) => {
         try {
-          // Validate session
-          const session = await auth.api.getSession({
-            headers: request.headers,
-          })
-
-          if (!session) {
-            return new Response('Unauthorized', {
-              status: 401,
-              statusText: 'Unauthorized',
-            })
-          }
+          const { user } = context
 
           return new Response(
             JSON.stringify({
-              email: session.user.email,
-              name: session.user.name,
-              id: session.user.id,
+              email: user.email,
+              name: user.name,
+              id: user.id,
             }),
             {
               status: 200,
