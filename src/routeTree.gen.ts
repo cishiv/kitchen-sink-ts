@@ -17,6 +17,8 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DpaRouteImport } from './routes/dpa'
 import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as ApiUserRouteImport } from './routes/api/user'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedBillingRouteImport } from './routes/_protected/billing'
@@ -69,6 +71,16 @@ const ProtectedRoute = ProtectedRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiUserRoute = ApiUserRouteImport.update({
@@ -153,6 +165,8 @@ export interface FileRoutesByFullPath {
   '/billing': typeof ProtectedBillingRouteWithChildren
   '/dashboard': typeof ProtectedDashboardRoute
   '/api/user': typeof ApiUserRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/billing/success': typeof ProtectedBillingSuccessRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
@@ -176,6 +190,8 @@ export interface FileRoutesByTo {
   '/billing': typeof ProtectedBillingRouteWithChildren
   '/dashboard': typeof ProtectedDashboardRoute
   '/api/user': typeof ApiUserRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/billing/success': typeof ProtectedBillingSuccessRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
@@ -201,6 +217,8 @@ export interface FileRoutesById {
   '/_protected/billing': typeof ProtectedBillingRouteWithChildren
   '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/api/user': typeof ApiUserRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/_protected/billing/success': typeof ProtectedBillingSuccessRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
@@ -226,6 +244,8 @@ export interface FileRouteTypes {
     | '/billing'
     | '/dashboard'
     | '/api/user'
+    | '/blog/$slug'
+    | '/blog'
     | '/billing/success'
     | '/api/auth/$'
     | '/api/billing/checkout'
@@ -249,6 +269,8 @@ export interface FileRouteTypes {
     | '/billing'
     | '/dashboard'
     | '/api/user'
+    | '/blog/$slug'
+    | '/blog'
     | '/billing/success'
     | '/api/auth/$'
     | '/api/billing/checkout'
@@ -273,6 +295,8 @@ export interface FileRouteTypes {
     | '/_protected/billing'
     | '/_protected/dashboard'
     | '/api/user'
+    | '/blog/$slug'
+    | '/blog/'
     | '/_protected/billing/success'
     | '/api/auth/$'
     | '/api/billing/checkout'
@@ -296,6 +320,8 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   SignupRoute: typeof SignupRoute
   ApiUserRoute: typeof ApiUserRoute
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiBillingCheckoutRoute: typeof ApiBillingCheckoutRoute
   ApiBillingSubscriptionRoute: typeof ApiBillingSubscriptionRoute
@@ -364,6 +390,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/user': {
@@ -502,6 +542,8 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   SignupRoute: SignupRoute,
   ApiUserRoute: ApiUserRoute,
+  BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiBillingCheckoutRoute: ApiBillingCheckoutRoute,
   ApiBillingSubscriptionRoute: ApiBillingSubscriptionRoute,

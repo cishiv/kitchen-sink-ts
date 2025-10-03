@@ -29,7 +29,7 @@ export interface BlogPostPreview {
   readingTime: string
 }
 
-const marked = new Marked(
+export const marked = new Marked(
   markedHighlight({
     langPrefix: 'hljs language-',
     highlight(code, lang) {
@@ -39,7 +39,7 @@ const marked = new Marked(
   }),
 )
 
-const BLOG_DIR = path.join(process.cwd(), 'src', 'content', 'blog')
+export const BLOG_DIR = path.join(process.cwd(), 'src', 'content', 'blog')
 
 /**
  * Get all blog posts with metadata (for blog index)
