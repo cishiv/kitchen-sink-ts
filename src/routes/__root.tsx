@@ -45,7 +45,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <Header />
+        {!session && <Header />}
         <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>
