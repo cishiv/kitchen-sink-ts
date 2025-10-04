@@ -323,6 +323,18 @@ async function handleSubscriptionUpdated(data: any) {
       amount: data.amount,
     })
 
+    // Check if subscription exists first
+    const existing = await subscriptionExists(data.id)
+    if (!existing) {
+      console.warn(
+        `⚠️ Received update for non-existent subscription ${data.id}. This may indicate webhook delivery order issues.`,
+      )
+      // Optionally create it if it doesn't exist (webhook ordering edge case)
+      console.log(`Creating subscription ${data.id} from update event`)
+      await handleSubscriptionCreated(data)
+      return
+    }
+
     await db
       .update(subscriptions)
       .set({
@@ -353,8 +365,6 @@ async function handleSubscriptionUpdated(data: any) {
   }
 }
 
-// FIXME: This function is wrong. If we have cancelAtPeriodEnd, we should not mark it as canceled.
-// TODO: Fix this.
 async function handleSubscriptionCanceled(data: any) {
   try {
     console.log(
@@ -369,21 +379,39 @@ async function handleSubscriptionCanceled(data: any) {
       customerEmail,
       cancellationReason: data.customerCancellationReason,
       cancellationComment: data.customerCancellationComment,
+      cancelAtPeriodEnd: data.cancelAtPeriodEnd,
     })
+
+    // If cancelAtPeriodEnd is true, keep status as is (likely 'active')
+    // The subscription will be marked as canceled/revoked when the period actually ends
+    const updateData = data.cancelAtPeriodEnd
+      ? {
+          cancelAtPeriodEnd: true,
+          canceledAt: new Date(),
+          cancellationReason: data.customerCancellationReason,
+          cancellationComment: data.customerCancellationComment,
+          customerExternalId: customerId || null,
+          updatedAt: new Date(),
+        }
+      : {
+          status: 'canceled',
+          cancelAtPeriodEnd: false,
+          canceledAt: new Date(),
+          cancellationReason: data.customerCancellationReason,
+          cancellationComment: data.customerCancellationComment,
+          customerExternalId: customerId || null,
+          updatedAt: new Date(),
+        }
 
     await db
       .update(subscriptions)
-      .set({
-        status: 'canceled',
-        canceledAt: new Date(),
-        cancellationReason: data.customerCancellationReason,
-        cancellationComment: data.customerCancellationComment,
-        customerExternalId: customerId || null,
-        updatedAt: new Date(),
-      })
+      .set(updateData)
       .where(eq(subscriptions.polarSubscriptionId, data.id))
 
-    console.log(`✅ Marked subscription ${data.id} as canceled`)
+    const message = data.cancelAtPeriodEnd
+      ? `✅ Subscription ${data.id} will cancel at period end`
+      : `✅ Subscription ${data.id} canceled immediately`
+    console.log(message)
   } catch (error) {
     console.error('Error handling subscription canceled:', error)
     throw error

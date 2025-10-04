@@ -3,14 +3,14 @@ import type { JSX } from 'react'
 import { getServerAuthUser } from '@/lib/auth-helpers'
 
 export const Route = createFileRoute('/_protected')({
-  beforeLoad: async (): Promise<void> => {
+  beforeLoad: async ({ location }): Promise<void> => {
     const authUser = await getServerAuthUser()
 
     if (!authUser) {
       throw redirect({
         to: '/login',
         search: {
-          redirect: window.location.pathname,
+          redirect: location.pathname,
         },
       })
     }

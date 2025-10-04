@@ -4,10 +4,43 @@ import type { AuthContext } from '@/middleware/auth-middleware'
 import { authMiddleware } from '@/middleware/auth-middleware'
 import { generatePresignedUploadUrl } from '@/lib/r2'
 
+// File upload constraints
+const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
+const ALLOWED_MIME_TYPES = [
+  // Images
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+  'image/svg+xml',
+  // Documents
+  'application/pdf',
+  'text/plain',
+  'text/csv',
+  'application/json',
+  // Office documents
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation', // .pptx
+  // Archives
+  'application/zip',
+  'application/x-zip-compressed',
+]
+
 const requestSchema = z.object({
   fileName: z.string().min(1, 'File name is required'),
-  fileSize: z.number().min(0, 'File size must be non-negative'),
-  mimeType: z.string().min(1, 'MIME type is required'),
+  fileSize: z
+    .number()
+    .min(1, 'File size must be greater than 0')
+    .max(MAX_FILE_SIZE, `File size must not exceed ${MAX_FILE_SIZE / 1024 / 1024}MB`),
+  mimeType: z
+    .string()
+    .min(1, 'MIME type is required')
+    .refine(
+      (mime) => ALLOWED_MIME_TYPES.includes(mime),
+      (mime) => ({ message: `MIME type '${mime}' is not allowed` }),
+    ),
 })
 
 export const Route = createFileRoute('/api/uploads/presigned-url')({

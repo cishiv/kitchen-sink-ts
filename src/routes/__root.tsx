@@ -6,6 +6,7 @@ import { TanstackDevtools } from '@tanstack/react-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { authClient } from '@/lib/auth-client'
 import appCss from '@/styles.css?url'
 
 export const Route = createRootRoute({
@@ -33,8 +34,11 @@ export const Route = createRootRoute({
   shellComponent: RootDocument,
 })
 
+const queryClient = new QueryClient()
+
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const queryClient = new QueryClient()
+  const { data: session } = authClient.useSession()
+
   return (
     <html lang="en">
       <head>
@@ -45,7 +49,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>
-        <Footer />
+        {!session && <Footer />}
         <TanstackDevtools
           config={{
             position: 'bottom-left',

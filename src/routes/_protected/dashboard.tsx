@@ -24,27 +24,11 @@ export const Route = createFileRoute('/_protected/dashboard')({
 function DashboardPage(): JSX.Element {
   const router = useRouter()
   const { data: session, isPending } = authClient.useSession()
-  const [userEmail, setUserEmail] = useState<string | null>(null)
-  const [isLoadingEmail, setIsLoadingEmail] = useState<boolean>(true)
   const [isSigningOut, setIsSigningOut] = useState<boolean>(false)
   const [uploads, setUploads] = useState<Array<Upload>>([])
   const [isLoadingUploads, setIsLoadingUploads] = useState<boolean>(true)
 
   useEffect(() => {
-    async function fetchUserEmail(): Promise<void> {
-      try {
-        const response = await fetch('/api/user')
-        if (response.ok) {
-          const data = await response.json()
-          setUserEmail(data.email)
-        }
-      } catch (error) {
-        console.error('Failed to fetch user email:', error)
-      } finally {
-        setIsLoadingEmail(false)
-      }
-    }
-
     async function fetchUploads(): Promise<void> {
       try {
         const response = await fetch('/api/uploads')
@@ -60,7 +44,6 @@ function DashboardPage(): JSX.Element {
     }
 
     if (session?.user) {
-      fetchUserEmail()
       fetchUploads()
     }
   }, [session])
@@ -162,26 +145,6 @@ function DashboardPage(): JSX.Element {
                       {session.user.email}
                     </span>
                   </div>
-                </div>
-              </div>
-
-              <div className="p-4 border rounded-lg bg-white">
-                <h3 className="text-sm font-medium text-gray-500">
-                  Protected API Data
-                </h3>
-                <div className="mt-2">
-                  {isLoadingEmail ? (
-                    <Skeleton className="h-4 w-64" />
-                  ) : (
-                    <div>
-                      <span className="text-sm font-medium">
-                        Email from API:{' '}
-                      </span>
-                      <span className="text-sm text-gray-700">
-                        {userEmail ?? 'Not available'}
-                      </span>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>

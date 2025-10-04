@@ -53,11 +53,23 @@ export const Route = createFileRoute('/api/uploads/$id/')({
             })
           }
 
-          // Delete from R2
-          await deleteObject({ fileKey: upload.fileKey })
+          // Store fileKey for R2 deletion
+          const fileKey: string = upload.fileKey
 
-          // Delete from database
+          // Delete from database first (source of truth)
           await db.delete(uploads).where(eq(uploads.id, uploadId))
+
+          // Then delete from R2 (best effort - log if it fails)
+          try {
+            await deleteObject({ fileKey })
+          } catch (r2Error) {
+            console.error(
+              `Failed to delete R2 object ${fileKey} for upload ${uploadId}:`,
+              r2Error,
+            )
+            // DB record is already deleted, so return success but log the R2 failure
+            // Orphaned R2 files can be cleaned up with a maintenance script
+          }
 
           return new Response(
             JSON.stringify({ message: 'Upload deleted successfully' }),
