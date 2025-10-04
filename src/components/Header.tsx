@@ -42,16 +42,33 @@ export default function Header(): JSX.Element {
     <header className="border-b bg-background">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <nav className="flex items-center gap-6">
-          <Button variant="ghost" asChild>
-            <Link to="/" className="font-semibold text-lg">
-              Home
-            </Link>
-          </Button>
-          <Button variant="ghost" asChild>
-            <Link to="/blog" className="font-semibold text-lg">
-              Blog
-            </Link>
-          </Button>
+          {session?.user ? (
+            <>
+              <Button variant="ghost" asChild>
+                <Link to="/dashboard" className="font-semibold text-lg">
+                  Dashboard
+                </Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/billing" className="font-semibold text-lg">
+                  Billing
+                </Link>
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" asChild>
+                <Link to="/" className="font-semibold text-lg">
+                  Home
+                </Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/blog" className="font-semibold text-lg">
+                  Blog
+                </Link>
+              </Button>
+            </>
+          )}
         </nav>
 
         <nav className="flex items-center gap-2">
