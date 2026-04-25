@@ -29,6 +29,7 @@ import { Route as ApiUploadsCompleteRouteImport } from './routes/api/uploads/com
 import { Route as ApiBillingSubscriptionRouteImport } from './routes/api/billing/subscription'
 import { Route as ApiBillingCheckoutRouteImport } from './routes/api/billing/checkout'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiAiCompleteRouteImport } from './routes/api/ai/complete'
 import { Route as ProtectedBillingSuccessRouteImport } from './routes/_protected/billing.success'
 import { Route as ApiUploadsIdIndexRouteImport } from './routes/api/uploads/$id/index'
 import { Route as ApiUploadsIdViewRouteImport } from './routes/api/uploads/$id/view'
@@ -133,6 +134,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAiCompleteRoute = ApiAiCompleteRouteImport.update({
+  id: '/api/ai/complete',
+  path: '/api/ai/complete',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProtectedBillingSuccessRoute = ProtectedBillingSuccessRouteImport.update({
   id: '/success',
   path: '/success',
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/billing/success': typeof ProtectedBillingSuccessRoute
+  '/api/ai/complete': typeof ApiAiCompleteRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
   '/api/billing/subscription': typeof ApiBillingSubscriptionRoute
@@ -193,6 +200,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
   '/billing/success': typeof ProtectedBillingSuccessRoute
+  '/api/ai/complete': typeof ApiAiCompleteRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
   '/api/billing/subscription': typeof ApiBillingSubscriptionRoute
@@ -220,6 +228,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/_protected/billing/success': typeof ProtectedBillingSuccessRoute
+  '/api/ai/complete': typeof ApiAiCompleteRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
   '/api/billing/subscription': typeof ApiBillingSubscriptionRoute
@@ -247,6 +256,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog/'
     | '/billing/success'
+    | '/api/ai/complete'
     | '/api/auth/$'
     | '/api/billing/checkout'
     | '/api/billing/subscription'
@@ -272,6 +282,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog'
     | '/billing/success'
+    | '/api/ai/complete'
     | '/api/auth/$'
     | '/api/billing/checkout'
     | '/api/billing/subscription'
@@ -298,6 +309,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog/'
     | '/_protected/billing/success'
+    | '/api/ai/complete'
     | '/api/auth/$'
     | '/api/billing/checkout'
     | '/api/billing/subscription'
@@ -322,6 +334,7 @@ export interface RootRouteChildren {
   ApiUserRoute: typeof ApiUserRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  ApiAiCompleteRoute: typeof ApiAiCompleteRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiBillingCheckoutRoute: typeof ApiBillingCheckoutRoute
   ApiBillingSubscriptionRoute: typeof ApiBillingSubscriptionRoute
@@ -476,6 +489,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/ai/complete': {
+      id: '/api/ai/complete'
+      path: '/api/ai/complete'
+      fullPath: '/api/ai/complete'
+      preLoaderRoute: typeof ApiAiCompleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_protected/billing/success': {
       id: '/_protected/billing/success'
       path: '/success'
@@ -544,6 +564,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiUserRoute: ApiUserRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
+  ApiAiCompleteRoute: ApiAiCompleteRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiBillingCheckoutRoute: ApiBillingCheckoutRoute,
   ApiBillingSubscriptionRoute: ApiBillingSubscriptionRoute,

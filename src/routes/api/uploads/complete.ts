@@ -51,7 +51,7 @@ export const Route = createFileRoute('/api/uploads/complete')({
           })
         } catch (error) {
           if (error instanceof z.ZodError) {
-            return new Response(JSON.stringify({ error: error.errors }), {
+            return new Response(JSON.stringify({ error: error.issues }), {
               status: 400,
               headers: {
                 'Content-Type': 'application/json',
