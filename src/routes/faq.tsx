@@ -156,8 +156,7 @@ function FAQPage(): JSX.Element {
                 </AccordionTrigger>
                 <AccordionContent className="px-6">
                   Click the "Sign Up" button in the header, enter your email and
-                  password, and verify your email address. You can also sign up
-                  using Google OAuth for faster registration.
+                  password, and verify your email address.
                 </AccordionContent>
               </AccordionItem>
 
