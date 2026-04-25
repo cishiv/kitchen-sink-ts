@@ -97,18 +97,18 @@ Visit [http://localhost:3000](http://localhost:3000) to see your app!
 
 ### Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | React 19, TanStack Router |
-| **Backend** | TanStack Start (SSR) |
-| **Database** | PostgreSQL + Drizzle ORM |
-| **Auth** | BetterAuth (email/password + OAuth) |
-| **Payments** | Polar (subscriptions) |
-| **Storage** | Cloudflare R2 (S3-compatible) |
-| **Styling** | Tailwind CSS + shadcn/ui |
-| **Validation** | Zod |
-| **Build Tool** | Vite |
-| **Testing** | Vitest |
+| Layer          | Technology                          |
+| -------------- | ----------------------------------- |
+| **Frontend**   | React 19, TanStack Router           |
+| **Backend**    | TanStack Start (SSR)                |
+| **Database**   | PostgreSQL + Drizzle ORM            |
+| **Auth**       | BetterAuth (email/password + OAuth) |
+| **Payments**   | Polar (subscriptions)               |
+| **Storage**    | Cloudflare R2 (S3-compatible)       |
+| **Styling**    | Tailwind CSS + shadcn/ui            |
+| **Validation** | Zod                                 |
+| **Build Tool** | Vite                                |
+| **Testing**    | Vitest                              |
 
 ### Project Structure
 
@@ -146,6 +146,7 @@ kitchen-sink-ts/
 ### Authentication
 
 **Server-side auth helpers** (`src/lib/auth-helpers.ts`):
+
 - `getServerAuthUser()` - Returns current user or null
 - `requireAuth()` - Throws error if not authenticated
 
@@ -153,6 +154,7 @@ kitchen-sink-ts/
 Routes under `src/routes/_protected/` automatically redirect to `/login` if not authenticated.
 
 **Example: Protecting a custom route**
+
 ```typescript
 // src/routes/admin.tsx
 import { createFileRoute, redirect } from '@tanstack/react-router'
@@ -173,6 +175,7 @@ export const Route = createFileRoute('/admin')({
 ```
 
 **API Route Protection:**
+
 ```typescript
 import { authMiddleware } from '@/middleware/auth-middleware'
 
@@ -203,11 +206,14 @@ All tables are defined in `src/lib/db/schema.ts`:
 - **uploads** - File upload metadata
 
 **Example: Adding a new table**
+
 ```typescript
 // src/lib/db/schema.ts
 export const posts = pgTable('posts', {
   id: serial('id').primaryKey(),
-  userId: text('user_id').references(() => users.id).notNull(),
+  userId: text('user_id')
+    .references(() => users.id)
+    .notNull(),
   title: text('title').notNull(),
   content: text('content').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -221,6 +227,7 @@ export type NewPost = typeof posts.$inferInsert
 ```
 
 Then generate and apply migration:
+
 ```bash
 pnpm drizzle-kit generate
 pnpm drizzle-kit migrate
@@ -229,6 +236,7 @@ pnpm drizzle-kit migrate
 ### Subscription Billing (Polar)
 
 **Checkout Flow:**
+
 1. User clicks "Subscribe" button
 2. Frontend calls `/api/billing/checkout` with product ID
 3. User completes payment on Polar
@@ -236,6 +244,7 @@ pnpm drizzle-kit migrate
 5. User redirected to success page
 
 **Webhook Events Handled:**
+
 - `checkout.created` - Checkout session initiated
 - `checkout.updated` - Payment succeeded/failed
 - `subscription.created` - New subscription created
@@ -248,6 +257,7 @@ pnpm drizzle-kit migrate
 ### File Uploads (R2)
 
 **Upload Flow:**
+
 1. Frontend requests presigned upload URL from `/api/uploads/presigned-url`
 2. Validation checks: file size (max 50MB) and MIME type
 3. Frontend uploads file directly to R2 using presigned URL
@@ -255,6 +265,7 @@ pnpm drizzle-kit migrate
 5. File is accessible via `/api/uploads/:id/view` or `/api/uploads/:id/download`
 
 **Supported File Types:**
+
 - Images: JPEG, PNG, GIF, WebP, SVG
 - Documents: PDF, TXT, CSV, JSON
 - Office: DOCX, XLSX, PPTX
@@ -292,12 +303,14 @@ Components are installed to `src/components/ui/`
 ### Database Migrations
 
 **Workflow:**
+
 1. Modify `src/lib/db/schema.ts`
 2. Generate migration: `pnpm drizzle-kit generate`
 3. Review migration in `drizzle/` directory
 4. Apply migration: `pnpm drizzle-kit migrate`
 
 **Inspect Database:**
+
 ```bash
 pnpm drizzle-kit studio
 # Opens web UI at http://localhost:4983
@@ -323,6 +336,7 @@ pnpm drizzle-kit studio
 ### Webhooks
 
 Configure webhook endpoints in Polar dashboard:
+
 - **Webhook URL**: `https://yourdomain.com/api/webhooks/polar`
 - **Secret**: Use the value from `POLAR_WEBHOOK_SECRET`
 
@@ -346,6 +360,7 @@ Configure webhook endpoints in Polar dashboard:
 **Example: Add a Blog**
 
 1. **Create Database Schema:**
+
 ```typescript
 // src/lib/db/schema.ts
 export const blogPosts = pgTable('blog_posts', {
@@ -353,18 +368,22 @@ export const blogPosts = pgTable('blog_posts', {
   slug: text('slug').notNull().unique(),
   title: text('title').notNull(),
   content: text('content').notNull(),
-  authorId: text('author_id').references(() => users.id).notNull(),
+  authorId: text('author_id')
+    .references(() => users.id)
+    .notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 ```
 
 2. **Generate Migration:**
+
 ```bash
 pnpm drizzle-kit generate
 pnpm drizzle-kit migrate
 ```
 
 3. **Create API Routes:**
+
 ```typescript
 // src/routes/api/blog/index.ts
 export const Route = createFileRoute('/api/blog/')({
@@ -373,13 +392,14 @@ export const Route = createFileRoute('/api/blog/')({
       GET: async () => {
         const posts = await db.select().from(blogPosts)
         return Response.json(posts)
-      }
-    }
-  }
+      },
+    },
+  },
 })
 ```
 
 4. **Create Frontend Routes:**
+
 ```typescript
 // src/routes/blog/index.tsx
 export const Route = createFileRoute('/blog/')({
@@ -398,21 +418,25 @@ export const Route = createFileRoute('/blog/')({
 ### Common Issues
 
 **Database Connection Failed**
+
 - Verify `DATABASE_URL` is correct
 - Check PostgreSQL is running
 - Ensure database exists
 
 **OAuth Not Working**
+
 - Verify Google OAuth credentials
 - Check redirect URIs in Google Console
 - Ensure `BETTER_AUTH_URL` matches your domain
 
 **Webhooks Not Firing**
+
 - Verify `POLAR_WEBHOOK_SECRET` matches Polar dashboard
 - Check webhook URL is publicly accessible
 - Review logs in Polar dashboard
 
 **File Upload Fails**
+
 - Verify R2 credentials are correct
 - Check bucket exists and is accessible
 - Ensure CORS is configured on R2 bucket
@@ -420,11 +444,12 @@ export const Route = createFileRoute('/blog/')({
 ### Debug Mode
 
 Enable verbose logging:
+
 ```typescript
 // src/lib/db/index.ts
 export const db = drizzle(client, {
   schema,
-  logger: true  // Enable query logging
+  logger: true, // Enable query logging
 })
 ```
 
@@ -454,6 +479,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 🙏 Acknowledgments
 
 Built with:
+
 - [TanStack Start](https://tanstack.com/start) - Full-stack React framework
 - [BetterAuth](https://www.better-auth.com/) - Authentication library
 - [Polar](https://polar.sh/) - Subscription platform

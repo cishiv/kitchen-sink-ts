@@ -1,9 +1,9 @@
 ---
-title: "Getting Started with Kitchen Sink"
-description: "Learn how to set up and start building with Kitchen Sink, the modern full-stack TypeScript starter template."
-published: "2025-01-15"
-author: "Kitchen Sink Team"
-tags: ["tutorial", "getting-started", "typescript"]
+title: 'Getting Started with Kitchen Sink'
+description: 'Learn how to set up and start building with Kitchen Sink, the modern full-stack TypeScript starter template.'
+published: '2025-01-15'
+author: 'Kitchen Sink Team'
+tags: ['tutorial', 'getting-started', 'typescript']
 ---
 
 # Getting Started with Kitchen Sink

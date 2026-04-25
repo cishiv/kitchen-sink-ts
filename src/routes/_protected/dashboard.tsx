@@ -5,11 +5,7 @@ import { useEffect, useState } from 'react'
 import type { JSX } from 'react'
 import type { Upload } from '@/lib/db/schema'
 import { authClient } from '@/lib/auth-client'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { FileUploadZone } from '@/components/FileUploadZone'
 import { UploadsTable } from '@/components/UploadsTable'

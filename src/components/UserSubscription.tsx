@@ -128,7 +128,7 @@ export function UserSubscriptionView({
     )
   }
 
-  const subscription = subscriptionData.data as UserSubscription
+  const subscription = subscriptionData.data
   const nextBillingDate = new Date(subscription.currentPeriodEnd)
   const isActive = subscription.status === 'active'
   const willCancelAtPeriodEnd = subscription.cancelAtPeriodEnd

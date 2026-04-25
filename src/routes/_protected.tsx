@@ -1,4 +1,9 @@
-import { Outlet, createFileRoute, redirect, useRouterState } from '@tanstack/react-router'
+import {
+  Outlet,
+  createFileRoute,
+  redirect,
+  useRouterState,
+} from '@tanstack/react-router'
 import type { JSX } from 'react'
 import { getServerAuthUser } from '@/lib/auth-helpers'
 import { AppSidebar } from '@/components/app-sidebar'

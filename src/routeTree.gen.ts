@@ -166,7 +166,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof ProtectedDashboardRoute
   '/api/user': typeof ApiUserRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/blog': typeof BlogIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/billing/success': typeof ProtectedBillingSuccessRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
@@ -174,10 +174,10 @@ export interface FileRoutesByFullPath {
   '/api/uploads/complete': typeof ApiUploadsCompleteRoute
   '/api/uploads/presigned-url': typeof ApiUploadsPresignedUrlRoute
   '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
-  '/api/uploads': typeof ApiUploadsIndexRoute
+  '/api/uploads/': typeof ApiUploadsIndexRoute
   '/api/uploads/$id/download': typeof ApiUploadsIdDownloadRoute
   '/api/uploads/$id/view': typeof ApiUploadsIdViewRoute
-  '/api/uploads/$id': typeof ApiUploadsIdIndexRoute
+  '/api/uploads/$id/': typeof ApiUploadsIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -245,7 +245,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/api/user'
     | '/blog/$slug'
-    | '/blog'
+    | '/blog/'
     | '/billing/success'
     | '/api/auth/$'
     | '/api/billing/checkout'
@@ -253,10 +253,10 @@ export interface FileRouteTypes {
     | '/api/uploads/complete'
     | '/api/uploads/presigned-url'
     | '/api/webhooks/polar'
-    | '/api/uploads'
+    | '/api/uploads/'
     | '/api/uploads/$id/download'
     | '/api/uploads/$id/view'
-    | '/api/uploads/$id'
+    | '/api/uploads/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -381,7 +381,7 @@ declare module '@tanstack/react-router' {
     '/_protected': {
       id: '/_protected'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof ProtectedRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -395,7 +395,7 @@ declare module '@tanstack/react-router' {
     '/blog/': {
       id: '/blog/'
       path: '/blog'
-      fullPath: '/blog'
+      fullPath: '/blog/'
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -430,7 +430,7 @@ declare module '@tanstack/react-router' {
     '/api/uploads/': {
       id: '/api/uploads/'
       path: '/api/uploads'
-      fullPath: '/api/uploads'
+      fullPath: '/api/uploads/'
       preLoaderRoute: typeof ApiUploadsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -486,7 +486,7 @@ declare module '@tanstack/react-router' {
     '/api/uploads/$id/': {
       id: '/api/uploads/$id/'
       path: '/api/uploads/$id'
-      fullPath: '/api/uploads/$id'
+      fullPath: '/api/uploads/$id/'
       preLoaderRoute: typeof ApiUploadsIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }

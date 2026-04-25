@@ -45,8 +45,13 @@ export function SubscriptionActionButton({
         alert(`Error: ${error.error || 'Unknown error'}`)
       }
     } catch (error) {
-      alert(`Error ${action === 'cancel' ? 'canceling' : 'reinstating'} subscription. Please try again.`)
-      console.error(`Error ${action === 'cancel' ? 'canceling' : 'reinstating'} subscription:`, error)
+      alert(
+        `Error ${action === 'cancel' ? 'canceling' : 'reinstating'} subscription. Please try again.`,
+      )
+      console.error(
+        `Error ${action === 'cancel' ? 'canceling' : 'reinstating'} subscription:`,
+        error,
+      )
     } finally {
       setIsLoading(false)
     }

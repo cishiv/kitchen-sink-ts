@@ -1,9 +1,9 @@
 ---
-title: "Best Practices for Building with Kitchen Sink"
-description: "Learn the recommended patterns and best practices for building scalable applications with Kitchen Sink."
-published: "2025-02-10"
-author: "Kitchen Sink Team"
-tags: ["best-practices", "architecture", "typescript"]
+title: 'Best Practices for Building with Kitchen Sink'
+description: 'Learn the recommended patterns and best practices for building scalable applications with Kitchen Sink.'
+published: '2025-02-10'
+author: 'Kitchen Sink Team'
+tags: ['best-practices', 'architecture', 'typescript']
 ---
 
 # Best Practices for Building with Kitchen Sink
@@ -79,9 +79,11 @@ const users: User[] = await db.select().from(usersTable)
 For frequently executed queries, use prepared statements:
 
 ```typescript
-const getUserById = db.query.users.findFirst({
-  where: eq(users.id, sql.placeholder('id')),
-}).prepare()
+const getUserById = db.query.users
+  .findFirst({
+    where: eq(users.id, sql.placeholder('id')),
+  })
+  .prepare()
 
 const user = await getUserById.execute({ id: userId })
 ```

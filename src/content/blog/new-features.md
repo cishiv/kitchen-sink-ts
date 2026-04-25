@@ -1,9 +1,9 @@
 ---
-title: "Announcing New Features: File Uploads and Subscriptions"
-description: "Exciting updates to Kitchen Sink including R2 file uploads, Polar subscriptions, and improved billing management."
-published: "2025-02-01"
-author: "Kitchen Sink Team"
-tags: ["announcement", "features", "updates"]
+title: 'Announcing New Features: File Uploads and Subscriptions'
+description: 'Exciting updates to Kitchen Sink including R2 file uploads, Polar subscriptions, and improved billing management.'
+published: '2025-02-01'
+author: 'Kitchen Sink Team'
+tags: ['announcement', 'features', 'updates']
 ---
 
 # Announcing New Features

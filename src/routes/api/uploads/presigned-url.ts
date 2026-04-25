@@ -33,7 +33,10 @@ const requestSchema = z.object({
   fileSize: z
     .number()
     .min(1, 'File size must be greater than 0')
-    .max(MAX_FILE_SIZE, `File size must not exceed ${MAX_FILE_SIZE / 1024 / 1024}MB`),
+    .max(
+      MAX_FILE_SIZE,
+      `File size must not exceed ${MAX_FILE_SIZE / 1024 / 1024}MB`,
+    ),
   mimeType: z
     .string()
     .min(1, 'MIME type is required')

@@ -9,6 +9,7 @@ A full-stack TypeScript application built with TanStack Start (React), BetterAut
 ## Common Commands
 
 ### Development
+
 ```bash
 pnpm dev              # Start development server on port 3000
 pnpm build            # Build for production
@@ -16,6 +17,7 @@ pnpm serve            # Preview production build
 ```
 
 ### Testing & Code Quality
+
 ```bash
 pnpm test             # Run tests with Vitest
 pnpm lint             # Lint code with ESLint
@@ -24,6 +26,7 @@ pnpm check            # Format and lint (with auto-fix)
 ```
 
 ### Database
+
 ```bash
 pnpm drizzle-kit generate    # Generate migrations from schema changes
 pnpm drizzle-kit migrate     # Apply migrations to database
@@ -62,6 +65,7 @@ Environment variable `DATABASE_URL` must be set (Postgres connection string).
   - TypeScript types (e.g., `User`, `NewUser`)
 
 **Core tables**:
+
 - `users`, `sessions`, `accounts`, `verifications` - BetterAuth tables
 - `subscription_tiers` - Define available subscription tiers and features
 - `subscriptions` - Polar subscription data linked to users
@@ -90,7 +94,7 @@ export const getAuthUser = createServerFn({ method: 'GET' }).handler(
     const session = await auth.api.getSession({ headers: request.headers })
     if (!session || !session.user) return null
     return session
-  }
+  },
 )
 ```
 
@@ -109,6 +113,7 @@ Apply `authMiddleware` from `src/middleware/auth-middleware.ts` to protected API
 ## Environment Variables
 
 Required variables (add to `.env`):
+
 - `DATABASE_URL` - PostgreSQL connection string
 - `GOOGLE_CLIENT_ID` - For Google OAuth
 - `GOOGLE_CLIENT_SECRET` - For Google OAuth

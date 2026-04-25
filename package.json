@@ -3,15 +3,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev --port 3000",
-    "start": "node .output/server/index.mjs",
-    "build": "vite build",
-    "serve": "vite preview",
-    "test": "vitest run",
-    "lint": "eslint",
-    "format": "prettier",
-    "check": "prettier --write . && eslint --fix"
+    "dev": "bun --bun vite dev --port 3000",
+    "start": "bun .output/server/index.mjs",
+    "build": "bun --bun vite build",
+    "serve": "bun --bun vite preview",
+    "test": "bun --bun vitest run --passWithNoTests",
+    "lint": "bun --bun eslint",
+    "format": "bun --bun prettier",
+    "check": "bun --bun prettier --write . && bun --bun eslint --fix",
+    "db:generate": "bun --bun drizzle-kit generate",
+    "db:migrate": "bun --bun drizzle-kit migrate",
+    "db:push": "bun --bun drizzle-kit push",
+    "db:studio": "bun --bun drizzle-kit studio"
   },
+  "packageManager": "bun@1.2.18",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.901.0",
     "@aws-sdk/s3-request-presigner": "^3.901.0",
