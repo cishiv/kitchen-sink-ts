@@ -106,3 +106,4 @@ Steps:
 
 - For agents working in this repo, see `CLAUDE.md`.
 - For the spec workflow, see `SPECIFICATIONS/_WORKFLOW.md`.
+- If you want the same features split across a separate backend and frontend, see [kitchen-sink-twotier](https://github.com/cishiv/kitchen-sink-twotier).
