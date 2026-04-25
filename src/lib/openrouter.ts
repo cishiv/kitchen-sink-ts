@@ -5,8 +5,25 @@ import type { z } from 'zod'
 
 const FALLBACK_DEFAULT_MODEL = 'anthropic/claude-sonnet-4.5'
 
-export const openrouter = createOpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY,
+type OpenRouterClient = ReturnType<typeof createOpenRouter>
+
+let cached: OpenRouterClient | null = null
+
+const requireEnv = (key: string): string => {
+  const value = process.env[key]
+  if (!value) throw new Error(`${key} is not set`)
+  return value
+}
+
+const getOpenRouter = (): OpenRouterClient => {
+  if (cached) return cached
+  cached = createOpenRouter({ apiKey: requireEnv('OPENROUTER_API_KEY') })
+  return cached
+}
+
+export const openrouter = new Proxy({} as OpenRouterClient, {
+  get: (_, prop, receiver) => Reflect.get(getOpenRouter(), prop, receiver),
+  apply: (_, thisArg, args) => Reflect.apply(getOpenRouter() as never, thisArg, args),
 })
 
 export const getDefaultModelId = (): string => {
@@ -14,7 +31,7 @@ export const getDefaultModelId = (): string => {
 }
 
 export const getModel = (modelId?: string): LanguageModel => {
-  return openrouter.chat(modelId || getDefaultModelId())
+  return getOpenRouter().chat(modelId || getDefaultModelId())
 }
 
 export type CompleteParams = {
