@@ -14,7 +14,8 @@
     "db:generate": "bun --bun drizzle-kit generate",
     "db:migrate": "bun --bun drizzle-kit migrate",
     "db:push": "bun --bun drizzle-kit push",
-    "db:studio": "bun --bun drizzle-kit studio"
+    "db:studio": "bun --bun drizzle-kit studio",
+    "db:doc": "bun --bun run scripts/db-doc.ts"
   },
   "packageManager": "bun@1.2.18",
   "dependencies": {

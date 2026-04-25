@@ -49,8 +49,8 @@ Update your `.env` file with your database credentials:
 
 ```env
 DATABASE_URL="postgresql://user:password@localhost:5432/mydb"
-GOOGLE_CLIENT_ID="your-google-client-id"
-GOOGLE_CLIENT_SECRET="your-google-client-secret"
+BETTER_AUTH_SECRET="your-better-auth-secret"
+BETTER_AUTH_URL="http://localhost:3000"
 ```
 
 ### Run Migrations

@@ -11,7 +11,7 @@ A full-stack TypeScript template for shipping MVPs fast. Auth, subscriptions, fi
 | Server     | TanStack Start (SSR)                       |
 | Build      | Vite 7                                     |
 | Database   | PostgreSQL + Drizzle ORM                   |
-| Auth       | BetterAuth (email/password + Google OAuth) |
+| Auth       | BetterAuth (email/password)                |
 | Payments   | Polar                                      |
 | Storage    | Cloudflare R2 (S3-compatible)              |
 | LLM        | OpenRouter via Vercel AI SDK               |
@@ -45,11 +45,6 @@ All vars live in `.env.example`. Group by service:
 **Database**
 
 - `DATABASE_URL` — Postgres connection string
-
-**Google OAuth**
-
-- `GOOGLE_CLIENT_ID`
-- `GOOGLE_CLIENT_SECRET`
 
 **Polar (subscriptions)**
 

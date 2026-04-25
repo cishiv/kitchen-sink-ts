@@ -127,7 +127,6 @@ function PrivacyPolicyPage(): JSX.Element {
                 Our service integrates with third-party services, including:
               </p>
               <ul className="list-disc pl-6 text-gray-700 space-y-2">
-                <li>Authentication providers (Google OAuth)</li>
                 <li>Payment processors (Polar)</li>
                 <li>Cloud storage (Cloudflare R2)</li>
                 <li>Analytics services</li>
